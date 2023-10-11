@@ -9,7 +9,7 @@ vector < tuple < int, string, string > > NpcInfo::NPCMessage(int id, int evid, v
 			"你好，勇士\n\
 我是曾经作为这座塔守护者的仙灵，从现在起我和我的同伴们会在塔内尽可能给予你帮助" });
 		ret.push_back({ evid, "仙子", \
-			"旁边的书是怪物手册，可以查看怪物的能力，希望能帮到你" });
+			"旁边的书是怪物手册，可以查看怪物的能力，那个六芒星是楼层传送器，可以在去过的楼层往返，希望能帮到你" });
 		return ret;
 	}
 	if (id == 1) { 
@@ -163,6 +163,14 @@ vector < tuple < int, string, string > > NpcInfo::NPCMessage(int id, int evid, v
 		ret.push_back({ 112, "魔王", \
 "真是如附骨之蛆一般紧追不舍…\n\
 来吧，决一死战吧" });
+		return ret;
+	}
+	if (id == 19) {
+		ret.push_back({ -1, "勇士", \
+"这总不会是那个用史莱姆凝胶垫胸的假公主了吧" });
+		ret.push_back({ evid, "公主", \
+"终于有人来救我了…\n\
+我等的花儿都谢了" });
 		return ret;
 	}
 	return { { evid, "NPC", "哔哔哔卟卟卟啵啵啵叭叭叭" } };

@@ -624,6 +624,11 @@ void GameEvent::Order() {
 	// 根据|符号分割
 	vector <string> name = Split(Name, "|");
 	int kind, val;
+	// 过关
+	if (name[0] == "ENDING") {
+		System.Victory = true;
+		return;
+	}
 	// 路障
 	if (name[0] == "BARRIER") {
 		val = stoi(name[1]);
@@ -984,6 +989,7 @@ void GameEvent::Dialogue(int id) {
 	if (id == 11) { System.TransformingEventName = "ITEM|5|1"; System.DirectlyFunction = true; }
 	if (id == 12) { Actors[System.GameVariables[1]].Item[19] += 3; System.ItemRecord[19] = true; System.GameSwitches[19] = true; System.TransformingEventName = "SHOP|4"; }
 	if (id == 18) Exist = false;
+	if (id == 19) { System.TransformingEventName = "ENDING"; System.DirectlyFunction = true; }
 	auto info = npc.NPCMessage(id, ID, extrainfo);
 	for (auto sinfo : info) {
 		auto [nid, name, content] = sinfo;
@@ -1600,8 +1606,7 @@ pair <string, string> GameEnemies::EnemyElement(int elementid) {
 	}
 	if (elementid == 8) {
 		name = "再生";
-		description = "战\
-斗后会变身成另一怪物";
+		description = "战斗后会变身成另一怪物";
 	}
 	if (elementid == 9) {
 		name = "粘液拳";

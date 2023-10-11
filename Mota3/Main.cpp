@@ -1339,30 +1339,54 @@ void WindowStart::Refresh() {
 	if (!Visible) return;
 	// 描绘内容
 	string str = "";
-	if (next == 0) {
-		str = str + "从前，在距离王国边境数十里处，有一座废弃的高塔。\n";
-		str = str + "后面我忘了。";
-	}
-	else if (next == 1) {
-		str = str + "啊啊啊，别走，别走嘛\n";
-		str = str + "这其实是一个耳熟能详的故事，勇士持着宝剑闯入高塔拯救公主的故事。\n";
-		str = str + "本来这座高塔是王国曾经用来对抗魔物的军事要塞，在魔王被击毙后，剩下的怪物便夹起了尾巴，甚至不敢袭击路人，在数十年的和平之后，大家都认为剩下的怪物不足为惧，便慢慢减少了要塞的看守者。\n";
-		str = str + "谁曾想贼心不死的怪物们竟然早就选出了新的魔王，并迅速组织了起来，杀死了卫兵，抢占了高塔，并以高塔为据点向王国发起攻势，并在一次突袭中成功掳掠了王国的公主。\n";
+	if (!System.Victory) {
+		if (next == 0) {
+			str = str + "从前，在距离王国边境数十里处，有一座废弃的高塔。\n";
+			str = str + "后面我忘了。";
+		}
+		else if (next == 1) {
+			str = str + "啊啊啊，别走，别走嘛\n";
+			str = str + "这其实是一个耳熟能详的故事，勇士持着宝剑闯入高塔拯救公主的故事。\n";
+			str = str + "本来这座高塔是王国曾经用来对抗魔物的军事要塞，在魔王被击毙后，剩下的怪物便夹起了尾巴，甚至不敢袭击路人，在数十年的和平之后，大家都认为剩下的怪物不足为惧，便慢慢减少了要塞的看守者。\n";
+			str = str + "谁曾想贼心不死的怪物们竟然早就选出了新的魔王，并迅速组织了起来，杀死了卫兵，抢占了高塔，并以高塔为据点向王国发起攻势，并在一次突袭中成功掳掠了王国的公主。\n";
+		}
+		else {
+			str = str + "很可笑吧，一方在数十年的戒备中慢慢松懈，另一方却卧薪尝胆，吹起了反攻的号角，不过也不奇怪，只有千日做贼，哪有千日防贼的道理？\n";
+			str = str + "国王迅速组织起了以勇士为首的一支小队，要潜入魔塔救出公主\n";
+			str = str + "而我们的故事，就从这里开始……";
+		}
 	}
 	else {
-		str = str + "很可笑吧，一方在数十年的戒备中慢慢松懈，另一方却卧薪尝胆，吹起了反攻的号角，不过也不奇怪，只有千日做贼，哪有千日防贼的道理？\n";
-		str = str + "国王迅速组织起了以勇士为首的一支小队，要潜入魔塔救出公主\n";
-		str = str + "而我们的故事，就从这里开始……";
+		if (next == 0) {
+			str = str + "故事到这里就结束了，勇士成功救出了公主，领到了赏金，在卸甲后过起了悠闲的退休生活。\n";
+			str = str + "至于魔塔里面残余的怪物怎么办，现在没人去想，或许它们就此沉寂，或许许多年后又会出来祸害四方，谁知道呢，到时候只要相信后人的智慧就可以了。\n";
+			str = str + "故事比较老套，也比较正常，可喜可贺，可喜可贺，正如其名——anecdote";
+		}
+		else {
+			str = str + "恭喜过关，您的过关数据为\n";
+			str = str + "等级：" + to_string(Actors[System.GameVariables[1]].Level) + "；生命：" + to_string(Actors[System.GameVariables[1]].Hp) + "；攻击：" + to_string(Actors[System.GameVariables[1]].Atk) + "；防御：" + to_string(Actors[System.GameVariables[1]].Def);
+			str = str + "经验：" + to_string(Actors[System.GameVariables[1]].Exp) + "；金币：" + to_string(Actors[System.GameVariables[1]].Gold) + "。\n";
+		}
 	}
 	WDrawTexts(0, 0, 320, 320, str, 3);
 	// 按下确认键时
 	if (KeyBoard.TriggerConfirm()) {
-		if (next == 2) {
-			System.GameSwitches[5] = true;
-			Visible = false;
+		if (!System.Victory) {
+			if (next == 2) {
+				System.GameSwitches[5] = true;
+				Visible = false;
+			}
+			else
+				++next;
 		}
-		else
-			++next;
+		else {
+			if (next == 1) {
+				System.Victory = false;
+				System.Scene = new GameTitle;
+			}
+			else
+				++next;
+		}
 	}
 }
 
@@ -1600,6 +1624,11 @@ void GameMap::Update() {
 		}
 	}
 	// 展开故事开始的窗口
+	if (System.Victory) {
+		if (startwindow.next == 2) startwindow.next = 0;
+		startwindow.Visible = true;
+		return;
+	}
 	if (!System.GameSwitches[5]) {
 		startwindow.Visible = true;
 		return;

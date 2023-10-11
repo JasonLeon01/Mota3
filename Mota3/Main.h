@@ -270,11 +270,10 @@ WindowStart
 class WindowStart :public GameWindow {
 public:
 	string name;
+	int next;
 
 	WindowStart(int x, int y);
 	void Refresh();
-private:
-	int next;
 };
 
 /*
