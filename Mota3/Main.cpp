@@ -1160,7 +1160,7 @@ void WindowCure::Refresh() {
 		return;
 	}
 	// 按下确认键时
-	if (KeyBoard.TriggerConfirm()) {
+	if (KeyBoard.RepeatConfirm()) {
 		if (Actors[System.GameVariables[1]].Item[17 + Index] > 0) {
 			PlaySE(System.DecisionSE);
 			--Actors[System.GameVariables[1]].Item[17 + Index];
@@ -1825,7 +1825,7 @@ void GameMap::ShortcutKey() {
 			PlaySE(System.BuzzerSE);
 			return;
 		}
-		if (System.GameVariables[3] == 0 && (System.GameVariables[2] == 30 || System.GameVariables[2] == -30) && !System.GameSwitches[16]) {
+		if (System.GameVariables[3] == 0 && (System.GameVariables[2] == 30 && !System.GameSwitches[16]) || System.GameVariables[2] == -30) {
 			PlaySE(System.BuzzerSE);
 			return;
 		}
@@ -2229,7 +2229,7 @@ int GameMap::BattleUpdate() {
 							animationid = 27;
 							edam += battlewindow.LastDamage * 2 / 5;
 							edam *= Actors[System.GameVariables[1]].Item[21] > 0 ? 1.25 : 1;
-							edam = max(edam, battlewindow.eHp);
+							edam = min(edam, battlewindow.eHp);
 							if (Actors[System.GameVariables[1]].Item[23] > 0) {
 								Graphics.Damages.push({ battlewindow.X + battlewindow.Width - 48, battlewindow.Y + 48, 0, true, to_string((int)(edam * 0.6)), GameWindow::TextColor("green") });
 								battlewindow.aHp += edam * 0.4;
@@ -2890,67 +2890,6 @@ void GameMap::LoadData(int fileid) {
 	datastr.clear();
 	gamedata.clear();
 
-	//char data[64];
-	//int siz1, siz2;
-	//Read(inFile, siz1);
-	//for (int i = 0; i < siz1; ++i) {
-	//	int fst, scd;
-	//	Read(inFile, fst);
-	//	Read(inFile, siz2);
-	//	for (int j = 0; j < siz2; ++j) {
-	//		Read(inFile, scd);
-	//		System.FloorRecord[fst].push_back(scd);
-	//	}
-	//}
-	//Read(inFile, System.GameSwitches);
-	//Read(inFile, System.GameVariables);
-	//Read(inFile, System.ItemRecord);
-	//Read(inFile, System.GemRecord);
-	//Read(inFile, System.BottleRecord);
-	//Read(inFile, siz1);
-	//for (int i = 0; i < siz1; ++i) {
-	//	int fst, scd;
-	//	Read(inFile, fst);
-	//	Read(inFile, siz2);
-	//	for (int j = 0; j < siz2; ++j) {
-	//		Read(inFile, scd);
-	//		System.EventRecord[fst].insert(scd);
-	//	}
-	//}
-	//Read(inFile, siz1);
-	//for (int i = 0; i < siz1; ++i) {
-	//	int fst, scd;
-	//	char thd[64];
-	//	memset(thd, 0, sizeof(thd));
-	//	Read(inFile, fst);
-	//	Read(inFile, siz2);
-	//	for (int j = 0; j < siz2; ++j) {
-	//		Read(inFile, scd);
-	//		Read(inFile, thd);
-	//		System.TransRecord[fst][scd] = thd;
-	//	}
-	//}
-	//Read(inFile, siz1);
-	//for (int i = 0; i < siz1; ++i) {
-	//	Read(inFile, data);
-	//	Actors[i].Name = data;
-	//	Read(inFile, data);
-	//	Actors[i].File = data;
-	//	Read(inFile, Actors[i].Status);
-	//	Read(inFile, Actors[i].Level);
-	//	Read(inFile, Actors[i].Hp);
-	//	Read(inFile, Actors[i].Atk);
-	//	Read(inFile, Actors[i].Def);
-	//	Read(inFile, Actors[i].Mdef);
-	//	Read(inFile, Actors[i].Breath);
-	//	Read(inFile, Actors[i].BreathLimit);
-	//	Read(inFile, Actors[i].Exp);
-	//	Read(inFile, Actors[i].Gold);
-	//	Read(inFile, Actors[i].Item);
-	//	Read(inFile, Actors[i].MapID);
-	//	Read(inFile, Actors[i].X);
-	//	Read(inFile, Actors[i].Y);
-	//}
 	inFile.close();
 }
 
